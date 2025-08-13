@@ -1,0 +1,27 @@
+trigger:
+- main
+
+variables:
+  - name: resource_group_name
+    type: string
+    default: "my-rg"
+  - name: subscription_id
+    type: string
+    default: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: '<your-service-connection-name>'
+    scriptType: 'ps'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      $rgName = "$(resource_group_name)"
+      $subscriptionId = "$(subscription_id)"
+      az account set --subscription $subscriptionId
+      az group create --name $rgName --location "East US"
+    displayName: 'Create Resource Group'
+
